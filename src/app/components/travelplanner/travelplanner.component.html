@@ -1,0 +1,58 @@
+<div class="container">
+    <h2>Places to Visit</h2>
+    <div *ngFor="let place of getPlaces()">
+        <h3>{{ place.name }}</h3>
+        <p>Days Recommended: {{ place.numberOfDays }}</p>
+        <p>Terrain: {{ place.terrain }}</p>
+        <p>Transport: {{ place.transport }}</p>
+        <p>Rating: {{ place.rating }}</p>
+        <h4>Hotels in {{ place.name }}</h4>
+        <ul>
+            <li *ngFor="let hotel of place.hotels">
+                {{ hotel.name }} - {{ hotel.starRating }} stars - {{ hotel.rentPerNight }}/night
+                <br>
+                Available Rooms: {{ hotel.availableRooms }}
+            </li>
+        </ul>
+    </div>
+</div>
+
+<h2>Select a Place for Your Itinerary</h2>
+<div *ngFor="let place of places">
+    <button (click)="selectPlace(place.id)">{{ place.name }}</button>
+</div>
+
+<hr>
+
+<h2>Create Your Itinerary</h2>
+<form #itineraryForm="ngForm" (ngSubmit)="createItinerary(itineraryForm)">
+    <div *ngIf="selectedPlaceId">
+        <p>Creating itinerary for: {{ getSelectedPlaceName() }}</p>
+
+        <div class="form-group">
+            <label for="hotelId">Select Hotel:</label>
+            <select name="hotelId" ngModel required class="form-control">
+                <option *ngFor="let hotel of getHotelsForPlace(selectedPlaceId)" [value]="hotel.id">{{ hotel.name }}
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="numberOfRooms">Number of Rooms:</label>
+            <input type="number" name="numberOfRooms" ngModel required min="1" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="startDate">Start Date:</label>
+            <input type="date" name="startDate" ngModel required class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="endDate">End Date:</label>
+            <input type="date" name="endDate" ngModel required class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">Create Itinerary</button>
+    </div>
+    <div *ngIf="!selectedPlaceId">
+        <p>Please select a place to create an itinerary.</p>
+    </div>
+</form>
